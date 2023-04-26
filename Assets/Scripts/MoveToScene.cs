@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+    
 public class MoveToScene : MonoBehaviour    
 {
     private enum Scenes
     {
         PVPScene,
+        PVPCScene,
         Menu
     }
 

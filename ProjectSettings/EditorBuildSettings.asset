@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/PvPScene.unity
-    guid: 480cb8845ef607b46b2db790718570f0
-  - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: db1fa57e3ad0b2545b69301936c3aed9
+  - enabled: 1
+    path: Assets/Scenes/PVPScene.unity
+    guid: 480cb8845ef607b46b2db790718570f0
+  - enabled: 1
+    path: Assets/Scenes/PVPCScene.unity
+    guid: 2c82a40a26ff03d4a86bf8fb9e47f61a
   m_configObjects: {}

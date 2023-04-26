@@ -25,7 +25,7 @@ public class GameStarter : MonoBehaviour
     [SerializeField] private GameObject randomiseButton1;
     [SerializeField] private GameObject randomiseButton2;
     
-    [SerializeField] private GameObject gameObjectParentFieldOne;
+    [SerializeField] public GameObject gameObjectParentFieldOne;
     [SerializeField] private GameObject gameObjectParentFieldTwo; 
     
     [SerializeField] private TextMeshProUGUI statusText;
@@ -181,13 +181,12 @@ public class GameStarter : MonoBehaviour
             while (!spawned && attempts < 10000)
             {       
                 int x = Random.Range(-5, 6 - shipScript.partCount);
-                int y = Random.Range(-5, 6 - shipScript.partCount);    
+                int y = Random.Range(-5, 6 - shipScript.partCount);             
                 
-                bool isVertical = Random.Range(0, 2) == 0;  
-    
+                bool isVertical = Random.Range(0, 2) == 0;
+
                 shipScript.rotated = isVertical;
                 shipScript.internalPosition = new Vector2(x * step, y * step);
- 
 
                 if (!shipScript.CheckForCollisions(shipsArray))
                 {
@@ -237,7 +236,7 @@ public class GameStarter : MonoBehaviour
 
         if (deadShips == player1Ships.Length)   
         {
-            OnWinDetected("1");
+            OnWinDetected("2");
         }
 
         deadShips = 0;
@@ -252,7 +251,7 @@ public class GameStarter : MonoBehaviour
 
         if (deadShips == player2Ships.Length)
         {
-            OnWinDetected("2");
+            OnWinDetected("1");
         }
     }
 

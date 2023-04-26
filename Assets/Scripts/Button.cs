@@ -5,10 +5,10 @@ public class Button : MonoBehaviour
 {
     private UnityEngine.UI.Image _image;
 
-    private Boolean _wasChosen;
-    private Boolean _isHitted;
+    public Boolean _wasChosen;
+    public Boolean _isHitted;
 
-    private GameStarter _gameStarted;
+    private GameStarter _gameStarter;
     
     [SerializeField] private Sprite missSprite;
     [SerializeField] private Sprite hitSprite;
@@ -16,20 +16,20 @@ public class Button : MonoBehaviour
     private void Start()
     {
         _image = GetComponent<UnityEngine.UI.Image>();
-        _gameStarted = Camera.main.GetComponent<GameStarter>();
+        _gameStarter = Camera.main.GetComponent<GameStarter>();
     }
 
     public void OnClick()
     {
         if (_wasChosen) return;
 
-        if (!_gameStarted.IsFirstPlayerChoised)
+        if (!_gameStarter.IsFirstPlayerChoised)
         {
-            Setter(_gameStarted.player1Ships, 0);
+            Setter(_gameStarter.player1Ships, 0);
         }
-        else if (!_gameStarted.IsSecondPlayerChoised)
+        else if (!_gameStarter.IsSecondPlayerChoised)
         {
-            Setter(_gameStarted.player2Ships, 1);
+            Setter(_gameStarter.player2Ships, 1);
         }
 
         _wasChosen = true;
@@ -60,11 +60,11 @@ public class Button : MonoBehaviour
             
             if (switcher == 0)
             {
-                _gameStarted.IsFirstPlayerChoised = true;
+                _gameStarter.IsFirstPlayerChoised = true;
             }
             else
             {
-                _gameStarted.IsSecondPlayerChoised = true;
+                _gameStarter.IsSecondPlayerChoised = true;
             }
         }
     }
