@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ShipScript : MonoBehaviour
 {   
@@ -37,10 +35,9 @@ public class ShipScript : MonoBehaviour
     private Int32 _clicksCount;
     
     [HideInInspector] public Int32 deadPartsCount;
-    
-    private GameStarter _gameStarted;
 
-    private GameStarter _gameStarter;
+    private GameStarter _gameStarter; 
+
     private SpriteRenderer _spriteRenderer;
     private Camera _camera;
 
@@ -49,13 +46,13 @@ public class ShipScript : MonoBehaviour
         _camera = Camera.main;
         internalPosition = transform.localPosition;
         startPosition = transform.localPosition;
-        _gameStarted = Camera.main.GetComponent<GameStarter>();
+        _gameStarter = Camera.main.GetComponent<GameStarter>();
         _spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
     }
 
     private void Update()   
     {
-        if (!_gameStarted.IsGameStared)
+        if (!_gameStarter.IsGameStared)
         {
             if (_timer >= Time.time)
             {
@@ -90,10 +87,10 @@ public class ShipScript : MonoBehaviour
             }
             else
             {
-                transform.localPosition = internalPosition;
+                    transform.localPosition = internalPosition;
             }
 
-            if (rotated)
+            if (rotated)        
             {
                 transform.localScale = new Vector3(100f * partCount, 100f, 100f);
             }
@@ -103,6 +100,20 @@ public class ShipScript : MonoBehaviour
             }
         }
         
+        if (!_gameStarter.IsGameStared) return;
+        
+            
+        if (rotated)
+        {
+            transform.localScale = new Vector3(100f * partCount, 100f, 100f);
+        }   
+        else
+        {
+            transform.localScale = new Vector3(100f, 100f * partCount, 100f);
+        }
+        
+        transform.localPosition = internalPosition;
+
         if (isDead) return; 
         
         if (deadPartsCount >= partCount)
@@ -125,7 +136,7 @@ public class ShipScript : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (_gameStarted.IsGameStared) return;
+        if (_gameStarter.IsGameStared) return;
         
         _isButtonPressed = true;
         _clicksCount++;
@@ -137,7 +148,7 @@ public class ShipScript : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (_gameStarted.IsGameStared) return;
+        if (_gameStarter.IsGameStared) return;
         
         Vector2 mouseUpPosition = transform.localPosition;
 

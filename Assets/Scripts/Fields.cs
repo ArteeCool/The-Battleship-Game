@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Fields : MonoBehaviour
@@ -5,6 +6,7 @@ public class Fields : MonoBehaviour
     private float _previousPositionX, _previousPositionY, _startPositionX;
     public static readonly Vector2[,] FieldCoordinates = new Vector2[10, 10];
     private static GameObject  _gameObjectParentStatic;
+    
     private void Start()
     {
         _previousPositionX = -250f;
@@ -22,13 +24,22 @@ public class Fields : MonoBehaviour
         }
     }
 
-    public static void FillFields(GameObject objectToInstantiate, GameObject parent)
+    public static void FillFields(GameObject objectToInstantiate, GameObject parent, String arrayToSave)
     {
         foreach (var coordinate in FieldCoordinates)
         {
             var objectGameObject = Instantiate(objectToInstantiate, parent.transform);
 
             objectGameObject.GetComponent<RectTransform>().anchoredPosition = coordinate;
+
+            if (arrayToSave == "One")
+            {   
+                Camera.main.GetComponent<GameStarter>().buttonsShipsOne.Add(objectGameObject);
+            }
+            else
+            {
+                Camera.main.GetComponent<GameStarter>().buttonsShipsTwo.Add(objectGameObject);
+            }
         }
     }
 }

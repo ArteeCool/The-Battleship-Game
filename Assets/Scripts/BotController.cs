@@ -1,19 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 using Random = UnityEngine.Random;
 
 public class BotController : MonoBehaviour
 {
     
+    private Boolean wasUsed;
     private Camera _camera;
     private GameStarter _gameStarter;
-    [SerializeField] private List<GameObject> _playerFieldButtons = new List<GameObject>();
-
-
+    
     private void Start()
     {
         _camera = Camera.main;
@@ -26,7 +21,8 @@ public class BotController : MonoBehaviour
         {
             if (_gameStarter.IsFirstPlayerChoised)
             {
-                StartCoroutine(nameof(Wait));   
+                PrepareGame();
+                
             }
         }
 
@@ -39,37 +35,26 @@ public class BotController : MonoBehaviour
             
             while (!choosed && attempts < 10000)
             {
-                var randomButton = Random.Range(0, _playerFieldButtons.Count);
+                var randomButton = Random.Range(0, _gameStarter.buttonsShipsOne.Count);
                 
-                if (!_playerFieldButtons[randomButton].GetComponent<Button>()._wasChosen)
+                if (!_gameStarter.buttonsShipsOne[randomButton].GetComponent<Button>()._wasChosen)
                 {
-                    _playerFieldButtons[randomButton].GetComponent<Button>().OnClick();
+                    _gameStarter.buttonsShipsOne[randomButton].GetComponent<Button>().OnClick();
                     choosed = true;
                 }   
 
                 attempts++;
             }
         }
-        else
-        {
-            _gameStarter.StartGame();
-        }   
     }
 
-    private IEnumerator Wait()
-    {
+    private void PrepareGame()
+    { 
         foreach (var ship in _gameStarter.player2Ships)
             ship.transform.GetChild(0).gameObject.SetActive(false);
-        
-        _gameStarter.RandomShipsPositions("player2Ships");
-                
-        for (int i = 0; i < _gameStarter.gameObjectParentFieldOne.transform.childCount; i++)
-        {
-            _playerFieldButtons.Add(_gameStarter.gameObjectParentFieldOne.transform.GetChild(i).gameObject);
-        }
-        
-        yield return new WaitForSeconds(0.1f);
 
-        _gameStarter.StartGame();
+        _gameStarter.RandomShipsPositions("player2Ships");
+
+        _gameStarter.StartGame();   
     }
 }

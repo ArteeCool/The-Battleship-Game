@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,27 +7,30 @@ using Random = UnityEngine.Random;
 
 public class GameStarter : MonoBehaviour
 {
-    public Boolean IsGameStared;
-    public Boolean IsFirstPlayerChoised;
-    public Boolean IsSecondPlayerChoised;
+    [SerializeField] public Boolean IsGameStared;
+    [SerializeField] public Boolean IsFirstPlayerChoised;
+    [SerializeField] public Boolean IsSecondPlayerChoised;
 
-    public Boolean isRandomising;
+    [SerializeField] public Boolean isRandomising;
 
-    private Boolean _isRandomised;
+    [SerializeField] public Boolean isPVPC;
 
     [SerializeField] private GameObject blockLeftSide;
     [SerializeField] private GameObject blockRightSide;
     
-    public GameObject[] player1Ships;
-    public GameObject[] player2Ships;
+    [SerializeField] public GameObject[] player1Ships;
+    [SerializeField] public GameObject[] player2Ships;
 
     [SerializeField] private GameObject interactionButton;
 
     [SerializeField] private GameObject randomiseButton1;
     [SerializeField] private GameObject randomiseButton2;
     
-    [SerializeField] public GameObject gameObjectParentFieldOne;
-    [SerializeField] private GameObject gameObjectParentFieldTwo; 
+    [SerializeField] public List<GameObject> buttonsShipsOne = new List<GameObject>();
+    [SerializeField] public List<GameObject> buttonsShipsTwo = new List<GameObject>();      
+    
+    [SerializeField] public  GameObject gameObjectParentFieldOne;
+    [SerializeField] public GameObject gameObjectParentFieldTwo; 
     
     [SerializeField] private TextMeshProUGUI statusText;
     [SerializeField] private TextMeshProUGUI messageText;
@@ -34,7 +38,7 @@ public class GameStarter : MonoBehaviour
     private Int32 _shipsAtStart;
     
     
-    [Header("WinObjects")] 
+    [Header("WinObjects")]
     
     [SerializeField] private GameObject winMenu;
     [SerializeField] private TextMeshProUGUI congratsText;
@@ -75,6 +79,7 @@ public class GameStarter : MonoBehaviour
     {
         if (!IsGameStared)
         {
+            Debug.Log("Method SG");
             Blocker(true);
             
             if (!IsFirstPlayerChoised)
@@ -103,7 +108,12 @@ public class GameStarter : MonoBehaviour
                 foreach (var ship in player1Ships)
                     ship.transform.GetChild(0).gameObject.SetActive(false);
                 
-                Fields.FillFields(interactionButton, gameObjectParentFieldOne);
+                Fields.FillFields(interactionButton, gameObjectParentFieldOne, "One");
+
+                if (isPVPC)
+                {
+                    gameObject.GetComponent<BotController>().enabled = true;    
+                }
             }
             else if (!IsSecondPlayerChoised)
             {
@@ -134,7 +144,7 @@ public class GameStarter : MonoBehaviour
                 foreach (var ship in player2Ships)
                     ship.transform.GetChild(0).gameObject.SetActive(false);
 
-                Fields.FillFields(interactionButton, gameObjectParentFieldTwo);
+                Fields.FillFields(interactionButton, gameObjectParentFieldTwo, "Two");
             }
 
             if (!IsFirstPlayerChoised || !IsSecondPlayerChoised) return;
@@ -156,11 +166,17 @@ public class GameStarter : MonoBehaviour
         {
             blockLeftSide.SetActive(true);
             blockRightSide.SetActive(false);
-        }
+        }   
     }
 
-    public void RandomShipsPositions(String arrayToUse)
+    public void Randomise(String array)
     {
+        RandomShipsPositions(array);
+    }
+
+    public bool RandomShipsPositions(String arrayToUse)
+    {
+        Debug.Log("Methon RSP");
         GameObject[] shipsArray = new GameObject[] {};
         if (arrayToUse == "player1Ships")
         {
@@ -170,10 +186,10 @@ public class GameStarter : MonoBehaviour
         {
             shipsArray = player2Ships;
         }
-        
-        foreach (var ship in shipsArray)
+
+        for (int i = 0; i < shipsArray.Length; i++)
         {
-            var shipScript = ship.GetComponent<ShipScript>();
+            var shipScript = shipsArray[i].GetComponent<ShipScript>();
             var step = 50;
             var attempts = 0;   
             
@@ -188,14 +204,22 @@ public class GameStarter : MonoBehaviour
                 shipScript.rotated = isVertical;
                 shipScript.internalPosition = new Vector2(x * step, y * step);
 
-                if (!shipScript.CheckForCollisions(shipsArray))
-                {
+                if (!shipScript.CheckForCollisions(shipsArray)) 
+                {       
                     spawned = true;    
                 }
+                else
+                {
+                    attempts++;    
+                }
+            }
 
-                attempts++;
+            if (attempts >= 10000)
+            {
+                i = -1;
             }
         }
+        return false;
     }   
     private Boolean OnShipsHasColision(GameObject[] ships)
     {
