@@ -16,7 +16,7 @@ public class Button : MonoBehaviour
     private void Start()
     {
         _image = GetComponent<UnityEngine.UI.Image>();
-        _gameStarter = Camera.main.GetComponent<GameStarter>();
+            _gameStarter = Camera.main.GetComponent<GameStarter>();
     }
 
     public void OnClick()

@@ -79,7 +79,6 @@ public class GameStarter : MonoBehaviour
     {
         if (!IsGameStared)
         {
-            Debug.Log("Method SG");
             Blocker(true);
             
             if (!IsFirstPlayerChoised)
@@ -176,7 +175,6 @@ public class GameStarter : MonoBehaviour
 
     public bool RandomShipsPositions(String arrayToUse)
     {
-        Debug.Log("Methon RSP");
         GameObject[] shipsArray = new GameObject[] {};
         if (arrayToUse == "player1Ships")
         {
