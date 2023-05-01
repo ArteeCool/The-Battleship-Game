@@ -16,4 +16,9 @@ public class MoveToScene : MonoBehaviour
     {
         SceneManager.LoadScene(scene.ToString());
     }
+    
+    public void Quit()                                 
+    {                                                   
+        Application.Quit();                             
+    }                                                   
 }

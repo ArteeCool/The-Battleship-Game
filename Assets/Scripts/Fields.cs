@@ -34,11 +34,11 @@ public class Fields : MonoBehaviour
 
             if (arrayToSave == "One")
             {   
-                Camera.main.GetComponent<GameStarter>().buttonsShipsOne.Add(objectGameObject);
+                Camera.main.GetComponent<Launcher>().buttonsShipsOne.Add(objectGameObject);
             }
             else
             {
-                Camera.main.GetComponent<GameStarter>().buttonsShipsTwo.Add(objectGameObject);
+                Camera.main.GetComponent<Launcher>().buttonsShipsTwo.Add(objectGameObject);
             }
         }
     }

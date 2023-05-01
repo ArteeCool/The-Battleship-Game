@@ -1,35 +1,35 @@
 using System;
 using UnityEngine;
 
-public class Button : MonoBehaviour
+public class ClickDetection : MonoBehaviour
 {
     private UnityEngine.UI.Image _image;
 
     public Boolean _wasChosen;
     public Boolean _isHitted;
 
-    private GameStarter _gameStarter;
+    private Launcher _launcher;
     
     [SerializeField] private Sprite missSprite;
     [SerializeField] private Sprite hitSprite;
     
-    private void Start()
+    private void Start()    
     {
-        _image = GetComponent<UnityEngine.UI.Image>();
-            _gameStarter = Camera.main.GetComponent<GameStarter>();
+        _image = transform.GetChild(0).GetComponent<UnityEngine.UI.Image>();
+        _launcher = Camera.main.GetComponent<Launcher>();
     }
 
     public void OnClick()
     {
         if (_wasChosen) return;
 
-        if (!_gameStarter.IsFirstPlayerChoised)
+        if (!_launcher.IsFirstPlayerChoised)
         {
-            Setter(_gameStarter.player1Ships, 0);
+            Setter(_launcher.player1Ships, 0);
         }
-        else if (!_gameStarter.IsSecondPlayerChoised)
+        else if (!_launcher.IsSecondPlayerChoised)
         {
-            Setter(_gameStarter.player2Ships, 1);
+            Setter(_launcher.player2Ships, 1);
         }
 
         _wasChosen = true;
@@ -53,18 +53,21 @@ public class Button : MonoBehaviour
         {
             
             _image.sprite = hitSprite;
+            _launcher.messageText.text = "Hit!";
         }
         else
         {
             _image.sprite = missSprite;
+
+            _launcher.messageText.text = "Miss :(";
             
             if (switcher == 0)
             {
-                _gameStarter.IsFirstPlayerChoised = true;
+                _launcher.IsFirstPlayerChoised = true;
             }
             else
             {
-                _gameStarter.IsSecondPlayerChoised = true;
+                _launcher.IsSecondPlayerChoised = true;
             }
         }
     }

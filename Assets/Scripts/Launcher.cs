@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
-public class GameStarter : MonoBehaviour
+public class Launcher : MonoBehaviour
 {
     [SerializeField] public Boolean IsGameStared;
     [SerializeField] public Boolean IsFirstPlayerChoised;
@@ -32,8 +32,8 @@ public class GameStarter : MonoBehaviour
     [SerializeField] public  GameObject gameObjectParentFieldOne;
     [SerializeField] public GameObject gameObjectParentFieldTwo; 
     
-    [SerializeField] private TextMeshProUGUI statusText;
-    [SerializeField] private TextMeshProUGUI messageText;
+    [SerializeField] public TextMeshProUGUI statusText;
+    [SerializeField] public TextMeshProUGUI messageText;
 
     private Int32 _shipsAtStart;
     
@@ -49,16 +49,12 @@ public class GameStarter : MonoBehaviour
         if (!IsFirstPlayerChoised)
         {
             statusText.text = "Now it's player - 1";
-        }
+        }       
         else if (!IsSecondPlayerChoised)
         {
             statusText.text = "Now it's player - 2";
         }
-        else if (IsGameStared)
-        {
-            messageText.text = "Game is started!";
-        }
-        
+
         if (IsFirstPlayerChoised)
         {
             Blocker(false);
@@ -147,7 +143,9 @@ public class GameStarter : MonoBehaviour
             }
 
             if (!IsFirstPlayerChoised || !IsSecondPlayerChoised) return;
-            IsGameStared = true;
+            IsGameStared = true;    
+            
+            messageText.text = "Game is started!";
             
             IsFirstPlayerChoised = false;
             IsSecondPlayerChoised = false;
@@ -286,5 +284,10 @@ public class GameStarter : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(0);
+    }
+
+    private void Quit()
+    {
+        Application.Quit();
     }
 }

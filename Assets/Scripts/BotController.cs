@@ -12,7 +12,7 @@ public class BotController : MonoBehaviour
 
     private Boolean _wasUsed;
     private Camera _camera;
-    private GameStarter _gameStarter;
+    private Launcher _launcher;
     private GameObject _buttonWasHitted;
     [SerializeField] private List<Vector2> _positionToCheck = new List<Vector2>();
     [SerializeField] private List<Vector2> _positionToStep = new List<Vector2>();
@@ -21,22 +21,22 @@ public class BotController : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main;
-        _gameStarter = _camera.GetComponent<GameStarter>();
-    }
+        _launcher = _camera.GetComponent<Launcher>();
+        }
     
     private void Update()   
     {
-        if (!_gameStarter.IsGameStared)
+        if (!_launcher.IsGameStared)
         {
-            if (_gameStarter.IsFirstPlayerChoised)
+            if (_launcher.IsFirstPlayerChoised)
             {
                 PrepareGame();
             }
         }
 
-        if (!_gameStarter.IsGameStared) return;
+        if (!_launcher.IsGameStared) return;
 
-        if (!_gameStarter.IsFirstPlayerChoised)
+        if (!_launcher.IsFirstPlayerChoised)
         {
             AddPositionToCheck();
             
@@ -45,19 +45,19 @@ public class BotController : MonoBehaviour
             {
                 foreach (var position in _positionToStep)
                 {
-                    foreach (var button in _gameStarter.buttonsShipsOne)
+                    foreach (var button in _launcher.buttonsShipsOne)
                     {
                         if (button.GetComponent<RectTransform>().anchoredPosition == position)
                         {
-                            if (button.GetComponent<Button>()._wasChosen)
+                            if (button.GetComponent<ClickDetection>()._wasChosen)
                             {
                                 _positionToStep.Remove(position);
                                 return;                 
                             }
                             
-                            button.GetComponent<Button>().OnClick();
+                            button.GetComponent<ClickDetection>().OnClick();
 
-                            if (button.GetComponent<Button>()._isHitted)
+                            if (button.GetComponent<ClickDetection>()._isHitted)
                             {
                                 _positionToStep.Add(position + (position - _positionRemembered));
                                 _positionRemembered = position;
@@ -73,13 +73,13 @@ public class BotController : MonoBehaviour
             {
                 foreach (var position in _positionToCheck)
                 {
-                    foreach (var button in _gameStarter.buttonsShipsOne)
+                    foreach (var button in _launcher.buttonsShipsOne)
                     {
                         if (button.GetComponent<RectTransform>().anchoredPosition == position)
                         {
-                            button.GetComponent<Button>().OnClick();
+                            button.GetComponent<ClickDetection>().OnClick();
 
-                            if (button.GetComponent<Button>()._isHitted)
+                            if (button.GetComponent<ClickDetection>()._isHitted)
                             {
                                 _positionToStep.Add(position + (position - _positionRemembered));
                                 _positionRemembered = position;
@@ -113,7 +113,7 @@ public class BotController : MonoBehaviour
             
             while (!choosed && attempts < 10000)        
             {
-                var randomButton = _gameStarter.buttonsShipsOne[Random.Range(0, _gameStarter.buttonsShipsOne.Count)].GetComponent<Button>();
+                var randomButton = _launcher.buttonsShipsOne[Random.Range(0, _launcher.buttonsShipsOne.Count)].GetComponent<ClickDetection>();
                 
                 if (!randomButton._wasChosen)
                 {
@@ -138,9 +138,9 @@ public class BotController : MonoBehaviour
         {
             Vector2 position = _buttonWasHitted.GetComponent<RectTransform>().anchoredPosition;
 
-            foreach (var button in _gameStarter.buttonsShipsOne)
+            foreach (var button in _launcher.buttonsShipsOne)
             {
-                if (!button.GetComponent<Button>()._wasChosen)
+                if (!button.GetComponent<ClickDetection>()._wasChosen)
                 {
                     if (position + XPlus == button.GetComponent<RectTransform>().anchoredPosition)
                     {
@@ -174,11 +174,11 @@ public class BotController : MonoBehaviour
 
     private void PrepareGame()
     { 
-        foreach (var ship in _gameStarter.player2Ships)
+        foreach (var ship in _launcher.player2Ships)
             ship.transform.GetChild(0).gameObject.SetActive(false);
     
-        _gameStarter.RandomShipsPositions("player2Ships");
+        _launcher.RandomShipsPositions("player2Ships");
             
-        _gameStarter.StartGame();   
+        _launcher.StartGame();   
     }
 }

@@ -36,7 +36,7 @@ public class ShipScript : MonoBehaviour
     
     [HideInInspector] public Int32 deadPartsCount;
 
-    private GameStarter _gameStarter; 
+    private Launcher _launcher; 
 
     private SpriteRenderer _spriteRenderer;
     private Camera _camera;
@@ -46,39 +46,14 @@ public class ShipScript : MonoBehaviour
         _camera = Camera.main;
         internalPosition = transform.localPosition;
         startPosition = transform.localPosition;
-        _gameStarter = Camera.main.GetComponent<GameStarter>();
+        _launcher = Camera.main.GetComponent<Launcher>();
         _spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
     }
 
-    private void Update()   
+    private void Update()
     {
-        if (!_gameStarter.IsGameStared)
+        if (!_launcher.IsGameStared)
         {
-            if (_timer >= Time.time)
-            {
-                if (_clicksCount >= 2)
-                {
-                    if (rotated)
-                    {
-                        rotated = false;
-                    }
-                    else
-                    {
-                        rotated = true;
-                    }
-
-                    _clicksCount = 0;
-                }
-            }
-
-            if (_timer <= Time.time)
-            {
-                if (_clicksCount == 1)
-                {
-                    _clicksCount = 0;
-                }
-            }
-
             if (_isButtonPressed)
             {
                 Vector2 mousePositon = _camera.ScreenToWorldPoint(Input.mousePosition);
@@ -87,10 +62,10 @@ public class ShipScript : MonoBehaviour
             }
             else
             {
-                    transform.localPosition = internalPosition;
+                transform.localPosition = internalPosition;
             }
 
-            if (rotated)        
+            if (rotated)
             {
                 transform.localScale = new Vector3(100f * partCount, 100f, 100f);
             }
@@ -99,56 +74,53 @@ public class ShipScript : MonoBehaviour
                 transform.localScale = new Vector3(100f, 100f * partCount, 100f);
             }
         }
-        
-        if (!_gameStarter.IsGameStared) return;
-        
-            
+
+        if (!_launcher.IsGameStared) return;
+
+
         if (rotated)
         {
             transform.localScale = new Vector3(100f * partCount, 100f, 100f);
-        }   
+        }
         else
         {
             transform.localScale = new Vector3(100f, 100f * partCount, 100f);
         }
-        
+
         transform.localPosition = internalPosition;
 
-        if (isDead) return; 
-        
+        if (isDead) return;
+
         if (deadPartsCount >= partCount)
         {
             isDead = true;
             OnDead();
         }
-         
+
     }
 
     private void OnDead()
     {
         transform.GetChild(0).gameObject.SetActive(true);
         transform.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+        _launcher.messageText.text = "Dead! *_*";           
         for (int i = 0; i < buttonsAround.Count; i++)
         {
-            buttonsAround[i].GetComponent<Button>().SetterNoCheck();
+            buttonsAround[i].GetComponent<ClickDetection>().SetterNoCheck();
         }
     }
 
     private void OnMouseDown()
     {
-        if (_gameStarter.IsGameStared) return;
+        if (_launcher.IsGameStared) return;
         
         _isButtonPressed = true;
         _clicksCount++;
-        if (_clicksCount == 1)
-        {
-            _timer = Time.time + rotatePreiod;    
-        }
     }
 
     private void OnMouseUp()
     {
-        if (_gameStarter.IsGameStared) return;
+        if (_launcher.IsGameStared) return;
         
         Vector2 mouseUpPosition = transform.localPosition;
 
@@ -171,6 +143,11 @@ public class ShipScript : MonoBehaviour
         }
         
         _isButtonPressed = false;
+    }
+
+    private void OnMouseOver()
+    {
+        if (Input.GetMouseButtonUp(1)) rotated = !rotated; 
     }
 
     public void AddPartsPositions()
