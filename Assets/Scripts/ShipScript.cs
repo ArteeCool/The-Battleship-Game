@@ -147,6 +147,8 @@ public class ShipScript : MonoBehaviour
 
     private void OnMouseOver()
     {
+        if (_launcher.IsGameStared) return;
+        
         if (Input.GetMouseButtonUp(1)) rotated = !rotated; 
     }
 
